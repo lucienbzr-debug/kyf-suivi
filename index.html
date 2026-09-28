@@ -793,20 +793,16 @@ const DB = {
 };
 
 /* Un kit par culture du CEP : chaque ménage reçoit le kit de son CEP. */
+/* Quantités par ménage et nombre de ménages prévus (cible) communiqués le 28/09/2026. */
+const MARAICHER_ITEMS = () => ['Tomate', 'Aubergine', 'Oignon (blanc / rouge)', 'Amarante', 'Carotte', 'Poivron', 'Poireau', 'Chou']
+  .map((nom) => ({ code: U.slug(nom.split(' (')[0]), nom, unite: 'paquet', qte: 1 }));
 const DEFAULT_KITS = () => ({
-  mais: { nom: 'Kit Maïs', items: [{ code: 'mais', nom: 'Maïs', unite: 'kg', qte: null }] },
-  soja: { nom: 'Kit Soja', items: [{ code: 'soja', nom: 'Soja', unite: 'kg', qte: null }] },
-  riz: { nom: 'Kit Riz', items: [{ code: 'riz', nom: 'Riz', unite: 'kg', qte: null }] },
-  haricot: { nom: 'Kit Haricot', items: [{ code: 'haricot', nom: 'Haricot', unite: 'kg', qte: null }] },
-  pdt: { nom: 'Kit Pomme de terre', items: [{ code: 'pdt', nom: 'Pomme de terre', unite: 'kg', qte: null }] },
-  maraicher: { nom: 'Kit Maraîcher', items: [
-    { code: 'tomate', nom: 'Tomate', unite: 'g', qte: null },
-    { code: 'aubergine', nom: 'Aubergine', unite: 'g', qte: null },
-    { code: 'chou', nom: 'Chou', unite: 'g', qte: null },
-    { code: 'poireau', nom: 'Poireau', unite: 'g', qte: null },
-    { code: 'poivron', nom: 'Poivron', unite: 'g', qte: null },
-    { code: 'oignon', nom: 'Oignon', unite: 'g', qte: null },
-  ] },
+  mais: { nom: 'Kit Maïs', cible: null, items: [{ code: 'mais', nom: 'Maïs', unite: 'kg', qte: 10 }] },
+  soja: { nom: 'Kit Soja', cible: 200, items: [{ code: 'soja', nom: 'Soja', unite: 'kg', qte: 9 }] },
+  riz: { nom: 'Kit Riz', cible: 200, items: [{ code: 'riz', nom: 'Riz', unite: 'kg', qte: 10 }] },
+  haricot: { nom: 'Kit Haricot', cible: null, items: [{ code: 'haricot', nom: 'Haricot', unite: 'kg', qte: 10 }] },
+  pdt: { nom: 'Kit Pomme de terre', cible: 150, items: [{ code: 'pdt', nom: 'Pomme de terre', unite: 'kg', qte: 10 }] },
+  maraicher: { nom: 'Kit Maraîcher', cible: null, items: MARAICHER_ITEMS() },
 });
 const DEFAULT_SETTINGS = () => ({
   projet: 'KILIMO YA FURAHA',
@@ -819,6 +815,7 @@ const DEFAULT_SETTINGS = () => ({
     { code: 'cobaye', nom: 'Cobayes', male: 'Mâle', femelle: 'Femelles', m: 1, f: 2 },
   ],
   verrouillageMin: 15,
+  kitsVersion: 2,
   _u: 1,
 });
 
@@ -852,7 +849,22 @@ const Store = {
     dist.forEach((d) => S.dist.set(d.id, d));
     await Store.applySeed();
     await Store.migrateKits();
+    await Store.fillKitDefaults();
     S.reindex();
+  },
+  /* Complète les quantités / cibles encore vides avec les valeurs du projet, sans écraser une saisie. */
+  async fillKitDefaults() {
+    if ((S.settings.kitsVersion || 0) >= 2) return;
+    const def = DEFAULT_KITS();
+    for (const [code, dk] of Object.entries(def)) {
+      const k = S.settings.kits[code];
+      if (!k) { S.settings.kits[code] = dk; continue; }
+      if (k.cible == null) k.cible = dk.cible;
+      if (code === 'maraicher' && k.items.every((i) => i.qte == null)) { k.items = dk.items; continue; }
+      k.items.forEach((i) => { const d = dk.items.find((x) => x.code === i.code); if (d && i.qte == null) { i.qte = d.qte; i.unite = d.unite; } });
+    }
+    S.settings.kitsVersion = 2; S.settings._u = U.now();
+    await DB.kv('settings', S.settings);
   },
   /* Ancien modèle (kit vivrier générique) -> un kit par culture du CEP. */
   async migrateKits() {
@@ -1624,6 +1636,21 @@ Object.assign(I18N.sw, {
   "Kit Haricot": "Kifurushi cha maharagwe",
   "Kit Pomme de terre": "Kifurushi cha viazi",
   "Kit Maraîcher": "Kifurushi cha mboga",
+  "Ménages prévus (cible du kit)": "Kaya zilizopangwa (lengo la kifurushi)",
+  "non définie": "haijawekwa",
+  "Kits de semences par culture": "Vifurushi vya mbegu kwa zao",
+  "Contenu par ménage": "Yaliyomo kwa kila kaya",
+  "Affectés": "Waliopangiwa",
+  "Moins de ménages affectés que la cible": "Kaya zilizopangiwa ni chache kuliko lengo",
+  "Sans kit affecté": "Bila kifurushi",
+  "Affecter": "Panga",
+  "% calculé sur la cible du kit, ou sur les ménages affectés si la cible n'est pas définie.": "% imehesabiwa kwa lengo la kifurushi, au kwa kaya zilizopangiwa kama lengo halijawekwa.",
+  "Ménages affectés": "Kaya zilizopangiwa",
+  "Kits remis": "Vifurushi vilivyotolewa",
+  "Kits validés": "Vifurushi vilivyothibitishwa",
+  "Kits": "Vifurushi",
+  "paquet": "pakiti",
+  "Oignon (blanc / rouge)": "Kitunguu (cheupe / chekundu)",
 });
 
 /* Écrans de l'application. */
@@ -1678,6 +1705,16 @@ const Views = {
       const k = Store.kitFor(h);
       if (k) k.items.forEach((it) => { const r = items.get(it.nom) || { nom: it.nom, unite: it.unite, prevu: 0, remis: 0, sansQte: 0 }; if (it.qte) r.prevu += +it.qte; else r.sansQte++; items.set(it.nom, r); });
     }
+    const kits = Object.entries(S.settings.kits).map(([code, k]) => ({ code, nom: k.nom, cible: k.cible, items: k.items, affectes: 0, remis: 0, valides: 0 }));
+    let sansKit = 0;
+    for (const h of hhs) {
+      const k = Store.kitFor(h);
+      if (!k) { sansKit++; continue; }
+      const r = kits.find((x) => x.code === k.code);
+      r.affectes++;
+      const d = Store.activeDist(h.id, 'semences');
+      if (d) { r.remis++; if (d.statut === 'validee') r.valides++; }
+    }
     const q = { n: dists.length, photo: 0, sig: 0, gps: 0, qr: 0, mand: 0, ecart: 0, attente: 0, doublon: 0 };
     const pts = [];
     for (const d of dists) {
@@ -1689,7 +1726,7 @@ const Views = {
       if (d.type === 'semences') (d.items || []).forEach((x) => { const r = items.get(x.nom) || { nom: x.nom, unite: x.unite, prevu: 0, remis: 0, sansQte: 0 }; r.remis += +x.remis || 0; items.set(x.nom, r); });
     }
     const rejets = [...S.dist.values()].filter((d) => d.statut === 'rejetee' && (!terr || (S.hh.get(d.hhId) || {}).territoire === terr)).length;
-    return { st, byCep, dis, anim, items: [...items.values()], q, pts, rejets };
+    return { st, byCep, dis, anim, items: [...items.values()], q, pts, rejets, kits, sansKit };
   },
   async dashboard() {
     const terr = Q().get('t') || '';
@@ -1747,6 +1784,10 @@ const Views = {
           <div class="card"><h2>${t('Petit bétail remis')}</h2><table class="tbl"><thead><tr><th>${t('Espèce')}</th><th class="num">${t('Mâles')}</th><th class="num">${t('Femelles')}</th><th class="num">${t('Total / prévu')}</th><th>${t('Santé à la remise')}</th></tr></thead><tbody>
             ${R.anim.map((a) => `<tr><td><b>${t(a.nom)}</b></td><td class="num">${a.rm}/${a.pm}</td><td class="num">${a.rf}/${a.pf}</td><td class="num"><b>${a.rm + a.rf}</b>/${a.pm + a.pf} <span class="muted small">(${U.pct(a.rm + a.rf, a.pm + a.pf)}%)</span></td><td class="small"><span class="badge ok">${a.sante.bon}</span> <span class="badge warn">${a.sante.moyen}</span> <span class="badge bad">${a.sante.malade}</span></td></tr>`).join('')}</tbody></table>
             <p class="muted small">${t('Santé : bon / moyen / malade (nombre de lots).')}</p></div>
+          <div class="card"><h2>${t('Kits de semences par culture')}</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>${t('Kit')}</th><th>${t('Contenu par ménage')}</th><th class="num">${t('Cible')}</th><th class="num">${t('Affectés')}</th><th class="num">${t('Remis')}</th><th class="num">%</th></tr></thead><tbody>
+            ${R.kits.map((k) => { const ref = k.cible || k.affectes; const gap = k.cible && k.affectes < k.cible; return `<tr><td><b>${U.esc(t(k.nom))}</b></td><td class="small">${k.items.map((i) => `${i.qte ?? '?'} ${U.esc(t(i.unite))} ${U.esc(t(i.nom).toLowerCase())}`).join(', ')}</td><td class="num">${k.cible ?? '—'}</td><td class="num">${k.affectes}${gap ? ` <span class="badge warn" title="${t('Moins de ménages affectés que la cible')}">−${k.cible - k.affectes}</span>` : ''}</td><td class="num"><b>${k.remis}</b></td><td class="num">${U.pct(k.remis, ref)}</td></tr>`; }).join('')}
+            ${R.sansKit ? `<tr><td colspan="3"><span class="badge bad">${t('Sans kit affecté')}</span></td><td class="num">${R.sansKit}</td><td colspan="2">${UI.isSup() ? `<a href="#/parametres">${t('Affecter')}</a>` : ''}</td></tr>` : ''}</tbody></table></div>
+            <p class="muted small">${t("% calculé sur la cible du kit, ou sur les ménages affectés si la cible n'est pas définie.")}</p></div>
           <div class="card"><h2>${t('Semences remises')}</h2>${R.items.length ? `<table class="tbl"><thead><tr><th>${t('Article')}</th><th class="num">${t('Remis')}</th><th class="num">${t('Prévu')}</th><th class="num">%</th></tr></thead><tbody>${R.items.map((i) => `<tr><td>${U.esc(t(i.nom))}</td><td class="num">${+i.remis.toFixed(2)} ${U.esc(i.unite)}</td><td class="num">${i.prevu ? +i.prevu.toFixed(2) + ' ' + U.esc(i.unite) : `<span class="badge warn">${t('à définir')}</span>`}</td><td class="num">${i.prevu ? U.pct(i.remis, i.prevu) : '—'}</td></tr>`).join('')}</tbody></table>` : `<p class="muted">${t('Aucun kit affecté aux CEP.')}</p>`}
             ${R.items.some((i) => i.sansQte) ? `<div class="alert warn small" style="margin-top:8px">${t('Certaines quantités de kit ne sont pas encore définies.')} ${UI.isSup() ? `<a href="#/parametres">${t('Compléter dans Paramètres')}</a>` : ''}</div>` : ''}</div>
         </div>
@@ -2437,7 +2478,10 @@ Object.assign(Views, {
     [['sexe', t('Sexe')], ['age', t('Âge')], ['vuln', t('Vulnérabilité')]].forEach(([g, l]) => Object.entries(R.dis[g]).forEach(([k, v]) => dis.push([l, t(k), v.n, v.s, U.pct(v.s, v.n)])));
     dis.push([], [t('Espèce'), t('Mâles remis'), t('Femelles remises'), t('Prévu total'), t('Lots bon / moyen / malade')]);
     R.anim.forEach((a) => dis.push([t(a.nom), a.rm, a.rf, a.pm + a.pf, `${a.sante.bon} / ${a.sante.moyen} / ${a.sante.malade}`]));
-    const blob = XLSX.write([
+    const kitRows = [[t('Kit'), t('Contenu par ménage'), t('Cible'), t('Ménages affectés'), t('Kits remis'), t('Kits validés'), '% ' + t('de la cible')]];
+    R.kits.forEach((k) => kitRows.push([t(k.nom), k.items.map((i) => `${i.qte ?? '?'} ${i.unite} ${i.nom}`).join(', '), k.cible ?? '', k.affectes, k.remis, k.valides, k.cible ? U.pct(k.remis, k.cible) : '']));
+    kitRows.push([t('Sans kit affecté'), '', '', R.sansKit]);
+    const blob = XLSX.write([{ name: t('Kits'), rows: kitRows, widths: [20, 60, 10, 16, 12, 12, 12] },
       { name: t('Ménages & profilage'), rows: menages }, { name: t('Remises semences'), rows: sem }, { name: t('Remises bétail'), rows: bet },
       { name: t('Non servis'), rows: ns }, { name: t('Synthèse CEP'), rows: syn, widths: [9, 10, 28, 20, 22, 20] }, { name: t('Désagrégation'), rows: dis, widths: [18, 34, 12, 14, 8] },
     ]);
@@ -2603,7 +2647,7 @@ Object.assign(Views, {
         <label class="field"><span>${t('Verrouillage automatique (minutes)')}</span><input type="number" min="0" id="lock" value="${st.verrouillageMin}"></label>
         <label class="field"><span>${t('Partenaires (affichés sur la carte)')}</span><input type="text" id="part" value="${U.esc(st.partenaires)}"></label></div></div>
       <div class="card"><h2>${t('Composition des kits de semences')}</h2><p class="small muted">${t('Indiquez la quantité prévue par ménage. Ajoutez les articles manquants (oignon, carotte, amarante…).')}</p>
-        ${kitCodes.map((k) => `<h3>${U.esc(t(st.kits[k].nom))}</h3><div data-kit="${k}">${st.kits[k].items.map((i, n) => `<div class="qty" style="grid-template-columns:1fr 80px 80px 40px"><input type="text" value="${U.esc(i.nom)}" data-f="nom" data-n="${n}"><input type="text" value="${U.esc(i.unite)}" data-f="unite" data-n="${n}" placeholder="kg"><input type="number" min="0" step="any" value="${i.qte ?? ''}" data-f="qte" data-n="${n}" placeholder="${t('qté')}"><button class="btn sm ghost" data-del="${n}" title="${t('Supprimer')}">✕</button></div>`).join('')}
+        ${kitCodes.map((k) => `<h3>${U.esc(t(st.kits[k].nom))}</h3><div data-kit="${k}"><label class="field" style="max-width:260px"><span>${t('Ménages prévus (cible du kit)')}</span><input type="number" min="0" data-kcible="${k}" value="${st.kits[k].cible ?? ''}" placeholder="${t('non définie')}"></label>${st.kits[k].items.map((i, n) => `<div class="qty" style="grid-template-columns:1fr 80px 80px 40px"><input type="text" value="${U.esc(i.nom)}" data-f="nom" data-n="${n}"><input type="text" value="${U.esc(i.unite)}" data-f="unite" data-n="${n}" placeholder="kg"><input type="number" min="0" step="any" value="${i.qte ?? ''}" data-f="qte" data-n="${n}" placeholder="${t('qté')}"><button class="btn sm ghost" data-del="${n}" title="${t('Supprimer')}">✕</button></div>`).join('')}
           <button class="btn sm" data-add="${k}" style="margin-top:6px">+ ${t('Ajouter un article')}</button></div>`).join('')}
         <div class="row" style="margin-top:10px"><button class="btn sm" id="newkit">+ ${t('Nouveau type de kit')}</button></div></div>
       <div class="card"><h2>${t('Petit bétail prévu par ménage')}</h2><table class="tbl"><thead><tr><th>${t('Espèce')}</th><th class="num">${t('Mâles')}</th><th class="num">${t('Femelles')}</th></tr></thead><tbody>${st.animaux.map((a, n) => `<tr><td><b>${U.esc(t(a.nom))}</b></td><td><input type="number" min="0" data-am="${n}" value="${a.m}" style="max-width:90px"></td><td><input type="number" min="0" data-af="${n}" value="${a.f}" style="max-width:90px"></td></tr>`).join('')}</tbody></table></div>
@@ -2625,6 +2669,8 @@ Object.assign(Views, {
           const nom = g('nom').trim();
           return { code: it.code || U.slug(nom), nom, unite: g('unite').trim(), qte: g('qte') === '' ? null : +g('qte') };
         }).filter((i) => i.nom);
+        const c = U.$(`[data-kcible="${k}"]`, box).value;
+        st.kits[k].cible = c === '' ? null : +c;
       });
     };
     U.$$('[data-add]').forEach((b) => (b.onclick = () => { readKits(); st.kits[b.dataset.add].items.push({ code: U.uid('i'), nom: t('Nouvel article'), unite: 'kg', qte: null }); Views.parametres(); }));
