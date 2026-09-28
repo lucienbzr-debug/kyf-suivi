@@ -903,11 +903,14 @@ const Store = {
     const newCeps = [], newHh = [];
     for (const c of seed.ceps) {
       const ex = S.ceps.get(c.id);
-      if (!ex) { const rec = { ...c, _u: 1, _src: 'registre' }; S.ceps.set(c.id, rec); newCeps.push(rec); }
+      if (!ex) { const rec = { ...c, kitSeed: c.kit, _u: 1, _src: 'registre' }; S.ceps.set(c.id, rec); newCeps.push(rec); }
       else {
         // Les informations descriptives d'un CEP du registre suivent les listes (le kit reste celui choisi sur l'appareil).
         let changed = false;
-        if (!ex.kit && c.kit) { ex.kit = c.kit; changed = true; }
+        // Le kit suit le registre tant qu'il n'a pas été changé sur l'appareil (kitSeed = dernier kit reçu du registre).
+        const fromSeed = ex.kitSeed === undefined ? ex._src === 'registre' : ex.kit === ex.kitSeed;
+        if (c.kit && ex.kit !== c.kit && (!ex.kit || fromSeed)) { ex.kit = c.kit; changed = true; }
+        if (c.kit && ex.kitSeed !== c.kit) { ex.kitSeed = c.kit; changed = true; }
         if (ex._src === 'registre') ['nom', 'village', 'facilitateur', 'jour', 'speculation'].forEach((k) => { if (c[k] && ex[k] !== c[k]) { ex[k] = c[k]; changed = true; } });
         if (changed) { ex._u = U.now(); newCeps.push(ex); }
       }
