@@ -890,6 +890,7 @@ const Store = {
     for (const c of seed.ceps) {
       const ex = S.ceps.get(c.id);
       if (!ex) { const rec = { ...c, _u: 1, _src: 'registre' }; S.ceps.set(c.id, rec); newCeps.push(rec); }
+      else if (!ex.kit && c.kit) { ex.kit = c.kit; ex._u = U.now(); newCeps.push(ex); }
     }
     for (const h of seed.households) {
       if (!S.hh.has(h.id)) { const rec = { ...h, profil: {}, _u: 1, _src: 'registre' }; S.hh.set(h.id, rec); newHh.push(rec); }
