@@ -890,10 +890,22 @@ const Store = {
     for (const c of seed.ceps) {
       const ex = S.ceps.get(c.id);
       if (!ex) { const rec = { ...c, _u: 1, _src: 'registre' }; S.ceps.set(c.id, rec); newCeps.push(rec); }
-      else if (!ex.kit && c.kit) { ex.kit = c.kit; ex._u = U.now(); newCeps.push(ex); }
+      else {
+        // Les informations descriptives d'un CEP du registre suivent les listes (le kit reste celui choisi sur l'appareil).
+        let changed = false;
+        if (!ex.kit && c.kit) { ex.kit = c.kit; changed = true; }
+        if (ex._src === 'registre') ['nom', 'village', 'facilitateur', 'jour', 'speculation'].forEach((k) => { if (c[k] && ex[k] !== c[k]) { ex[k] = c[k]; changed = true; } });
+        if (changed) { ex._u = U.now(); newCeps.push(ex); }
+      }
     }
     for (const h of seed.households) {
-      if (!S.hh.has(h.id)) { const rec = { ...h, profil: {}, _u: 1, _src: 'registre' }; S.hh.set(h.id, rec); newHh.push(rec); }
+      const ex = S.hh.get(h.id);
+      if (!ex) { const rec = { ...h, profil: {}, _u: 1, _src: 'registre' }; S.hh.set(h.id, rec); newHh.push(rec); }
+      else if (ex._src === 'registre' && ex._u === 1) {
+        // Fiche jamais modifiée sur l'appareil : elle suit les corrections apportées aux listes.
+        const rec = { ...ex, ...h, profil: ex.profil || {}, _u: 1, _src: 'registre' };
+        if (JSON.stringify(rec) !== JSON.stringify(ex)) { S.hh.set(h.id, rec); newHh.push(rec); }
+      }
     }
     if (newCeps.length) await DB.putMany('ceps', newCeps);
     if (newHh.length) await DB.putMany('households', newHh);
