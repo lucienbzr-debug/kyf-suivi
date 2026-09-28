@@ -1652,6 +1652,59 @@ Object.assign(I18N.sw, {
   "Kits": "Vifurushi",
   "paquet": "pakiti",
   "Oignon (blanc / rouge)": "Kitunguu (cheupe / chekundu)",
+  "Ancien nom": "Jina la zamani",
+  "Annuler la correction": "Futa marekebisho",
+  "Après": "Baada",
+  "Avant": "Kabla",
+  "Avant d'imprimer : faites la séance photo du CEP, qui permet aussi de corriger les noms.": "Kabla ya kuchapisha: fanya zoezi la picha la CEP, ambalo pia linaruhusu kusahihisha majina.",
+  "CEP terminé": "CEP imekamilika",
+  "Ce n° de carte d'électeur est déjà enregistré pour {n} ({id}).": "Nambari hii ya kadi ya mpiga kura tayari imeandikwa kwa {n} ({id}).",
+  "Champ": "Sehemu",
+  "Choisissez un CEP pour commencer.": "Chagua CEP ili kuanza.",
+  "Cochez la case de vérification avec le bénéficiaire.": "Weka alama kwenye kisanduku cha uhakiki pamoja na mnufaika.",
+  "Contrôle": "Ukaguzi",
+  "Contrôlez chaque changement de nom : il pourrait masquer un remplacement de bénéficiaire.": "Kagua kila mabadiliko ya jina: yanaweza kuficha kubadilishwa kwa mnufaika.",
+  "Contrôlé par": "Imekaguliwa na",
+  "Corrections": "Marekebisho",
+  "Corrections d'identité": "Marekebisho ya utambulisho",
+  "Corrections identité": "Marekebisho utambulisho",
+  "Corrections précédentes": "Marekebisho ya awali",
+  "Erreur de transcription de la fiche": "Kosa la kunakili fomu",
+  "Identité vérifiée": "Utambulisho umehakikishwa",
+  "Imprimer les cartes": "Chapisha kadi",
+  "Indiquez le motif de la correction du nom.": "Taja sababu ya kusahihisha jina.",
+  "J'ai vérifié ces informations avec le bénéficiaire.": "Nimehakikisha taarifa hizi pamoja na mnufaika.",
+  "Le bénéficiaire accepte la photo pour sa carte et le suivi du projet.": "Mnufaika anakubali picha kwa kadi yake na ufuatiliaji wa mradi.",
+  "Membre suivant": "Mwanachama anayefuata",
+  "Motif": "Sababu",
+  "Motif de la correction du nom": "Sababu ya kusahihisha jina",
+  "Nb corrections": "Idadi ya marekebisho",
+  "Nom vérifié sur la carte d'électeur": "Jina limehakikishwa kwenye kadi ya mpiga kura",
+  "Orthographe donnée par le bénéficiaire": "Tahajia iliyotolewa na mnufaika",
+  "Par": "Na",
+  "Photo carte": "Picha ya kadi",
+  "Photo et vérification": "Picha na uhakiki",
+  "Photo et vérification d'identité": "Picha na uhakiki wa utambulisho",
+  "Post-nom ou prénom ajouté": "Jina la ukoo au jina la kwanza limeongezwa",
+  "Prenez la photo de chaque membre et corrigez son nom si nécessaire, avant d'imprimer les cartes.": "Piga picha ya kila mwanachama na usahihishe jina lake ikihitajika, kabla ya kuchapisha kadi.",
+  "Rétablir les anciennes valeurs pour ce ménage ?": "Kurudisha taarifa za zamani kwa kaya hii?",
+  "Séance photo et vérification": "Zoezi la picha na uhakiki",
+  "Voir": "Ona",
+  "corrigé": "imesahihishwa",
+  "identité non vérifiée": "utambulisho haujahakikishwa",
+  "identités vérifiées": "utambulisho uliohakikishwa",
+  "non vérifiée": "haijahakikishwa",
+  "photos": "picha",
+  "visage de face, fond clair": "uso mbele, mandharinyuma angavu",
+  "vérifié": "imehakikishwa",
+  "vérifiée": "imehakikishwa",
+  "{n} corrections d'identité à contrôler.": "Marekebisho {n} ya utambulisho ya kukaguliwa.",
+  "À contrôler": "Ya kukaguliwa",
+  "Contrôlées": "Zilizokaguliwa",
+  "Confirmée": "Imethibitishwa",
+  "Annulée": "Imefutwa",
+  "Écriture incertaine sur la fiche source : faites épeler le nom par le bénéficiaire et comparez avec sa carte d'électeur.": "Maandishi hayako wazi kwenye fomu ya asili: mwombe mnufaika aandike jina lake herufi kwa herufi na ulinganishe na kadi yake ya mpiga kura.",
+  "à faire": "ya kufanya",
 });
 
 /* Écrans de l'application. */
@@ -1895,7 +1948,7 @@ const Views = {
       <div class="grid g2">
         <div>
           <div class="card"><div class="card-preview">${Card.recto(h, photo)}</div>
-            <div class="row" style="justify-content:center"><button class="btn sm" id="b-card">${IC.print} ${t('Imprimer la carte')}</button><button class="btn sm" id="b-verso">${t('Voir le verso')}</button><button class="btn sm" id="b-fiche">${IC.report} ${t('Fiche PDF')}</button></div></div>
+            <div class="row" style="justify-content:center"><button class="btn sm primary" id="b-verif">${IC.camera} ${t('Photo et vérification')}</button><button class="btn sm" id="b-card">${IC.print} ${t('Imprimer la carte')}</button><button class="btn sm" id="b-verso">${t('Voir le verso')}</button><button class="btn sm" id="b-fiche">${IC.report} ${t('Fiche PDF')}</button></div></div>
           <div class="card"><h2>${t('Distributions')}</h2>
             <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
               <a class="btn ${s.sem ? '' : 'primary'}" href="#/d/${encodeURIComponent(h.id)}/semences">${s.sem ? '✓ ' : ''}${t('Kit de semences')}</a>
@@ -1910,7 +1963,9 @@ const Views = {
             <dt>${t('Téléphone')}</dt><dd>${U.esc(h.tel || '—')}${ver('tel')}</dd><dt>${t("N° carte d'électeur")}</dt><dd>${U.esc(h.carte || '—')}${ver('carte')}</dd>
             <dt>${t('Territoire')}</dt><dd>${U.esc(h.territoire)}</dd><dt>CEP</dt><dd>${U.esc(c.nom || '')} <span class="muted small">(${U.esc(h.cep)})</span></dd>
             <dt>${t('Village / provenance')}</dt><dd>${U.esc(h.village || h.lieu || '—')}${ver('village')}</dd><dt>${t('Facilitateur CEP')}</dt><dd>${U.esc(c.facilitateur || '—')}</dd>
-            <dt>${t('Spéculation CEP')}</dt><dd>${U.esc(h.speculation || c.speculation || '—')}</dd><dt>${t("Statut d'enquête")}</dt><dd>${U.esc(h.presence || '—')}</dd></dl></div>
+            <dt>${t('Spéculation CEP')}</dt><dd>${U.esc(h.speculation || c.speculation || '—')}</dd><dt>${t("Statut d'enquête")}</dt><dd>${U.esc(h.presence || '—')}</dd>
+            <dt>${t('Identité')}</dt><dd>${h.identite && h.identite.verifiee ? `<span class="badge ok">✓ ${t('vérifiée')}</span> <span class="small muted">${U.fmtDate(h.identite.date, false)} · ${U.esc(h.identite.parNom)}</span>` : `<span class="badge warn">${t('non vérifiée')}</span>`}</dd></dl>
+            ${(h.corrections || []).length ? `<h3>${t('Corrections')}</h3><div class="small">${h.corrections.slice().reverse().map((c) => `${U.fmtDate(c.date)} · ${U.esc(c.parNom)} : ${Object.entries(c.champs).map(([k, [a, b]]) => `${t((ID_FIELDS.find((f) => f[0] === k) || [, k])[1])} « ${U.esc(a || '—')} » → « <b>${U.esc(b || '—')}</b> »`).join(' ; ')}${c.revue ? ` <span class="badge ${c.revue.decision === 'annulee' ? 'bad' : 'ok'}">${t(c.revue.decision === 'annulee' ? 'Annulée' : 'Confirmée')}</span>` : ` <span class="badge warn">${t('À contrôler')}</span>`}`).join('<br>')}</div>` : ''}</div>
           <div class="card"><div class="row between"><h2>${t('Profil du ménage')}</h2>${p.completedAt ? `<span class="badge ok">${t('Profilé le')} ${U.fmtDate(p.completedAt, false)}</span>` : `<span class="badge warn">${t('Profilage à faire')}</span>`}</div>
             ${p.completedAt ? `<dl class="kv">
               <dt>${t('Chef de ménage')}</dt><dd>${p.chef === 'non' ? `${U.esc(p.nomChef || '')} (${U.esc(t(p.lienChef || ''))})` : t('Le bénéficiaire')}</dd>
@@ -1928,6 +1983,7 @@ const Views = {
           ${UI.isSup() && audits.length ? `<div class="card"><h2>${t('Historique (traçabilité)')}</h2><table class="tbl"><tbody>${audits.map((a) => `<tr><td class="small muted">${U.fmtDate(a.ts)}</td><td class="small">${U.esc(t(a.action))}</td><td class="small">${U.esc(a.userNom)}</td></tr>`).join('')}</tbody></table></div>` : ''}
         </div></div>`);
     U.$$('[data-lb]').forEach((i) => (i.onclick = () => UI.lightbox(i.src)));
+    U.$('#b-verif').onclick = async () => { if (await Views.verifyIdentity(h.id)) Views.menage(h.id); };
     U.$('#b-card').onclick = () => Print.cards([h]);
     U.$('#b-verso').onclick = () => UI.modal({ title: t('Verso de la carte'), body: `<div class="card-preview">${Card.verso(h)}</div>`, actions: [{ label: 'OK' }] });
     U.$('#b-fiche').onclick = () => Views.fichePdf(h);
@@ -1958,6 +2014,7 @@ const Views = {
       <dt>${t('Territoire')} · CEP</dt><dd>${U.esc(h.territoire)} · ${U.esc(c.nom || '')} (${U.esc(h.cep)})</dd><dt>${t('Village')}</dt><dd>${U.esc(h.village || h.lieu || c.village || '—')}</dd>
       <dt>${t('Téléphone')} · ${t("Carte d'électeur")}</dt><dd>${U.esc(h.tel || '—')} · ${U.esc(h.carte || '—')}</dd><dt>${t('Facilitateur CEP')}</dt><dd>${U.esc(c.facilitateur || '—')}</dd></dl>
       <div style="width:110px">${QR.svg(h.id)}</div></div>
+      ${(h.corrections || []).length ? `<h2>${t("Corrections d'identité")}</h2><table><tr><th>${t('Date')}</th><th>${t('Par')}</th><th>${t('Champ')}</th><th>${t('Avant')}</th><th>${t('Après')}</th><th>${t('Motif')}</th><th>${t('Contrôle')}</th></tr>${h.corrections.flatMap((c) => Object.entries(c.champs).map(([k, [a, b]]) => `<tr><td>${U.fmtDate(c.date)}</td><td>${U.esc(c.parNom)}</td><td>${t((ID_FIELDS.find((f) => f[0] === k) || [, k])[1])}</td><td>${U.esc(a)}</td><td>${U.esc(b)}</td><td>${U.esc(t(c.motif || ''))}</td><td>${c.revue ? t(c.revue.decision === 'annulee' ? 'Annulée' : 'Confirmée') + ' — ' + U.esc(c.revue.parNom) : t('À contrôler')}</td></tr>`)).join('')}</table>` : ''}
       <h2>${t('Profil du ménage')}</h2>
       ${p.completedAt ? `<dl class="kv"><dt>${t('Taille du ménage')}</dt><dd>${p.taille || '—'} (${p.hommes || 0} H / ${p.femmes || 0} F ; ${p.enf5 || 0} &lt;5 ${t('ans')} ; ${p.agees || 0} 60+)</dd>
         <dt>${t('Chef de ménage')}</dt><dd>${p.chef === 'non' ? U.esc(p.nomChef || '') : t('Le bénéficiaire')} · ${U.esc(t(p.etatCivil || ''))}</dd>
@@ -2366,6 +2423,7 @@ Object.assign(Views, {
     const clean = list.filter((d) => d.statut === 'en_attente' && !Store.anomalies(d).length);
     await shell(`<div class="page-head"><div><div class="kicker">${t('Superviseur')}</div><h1>${t('Validation des remises')}</h1><div class="sub">${t('Contrôlez les preuves avant de valider.')}</div></div>
       ${f === 'en_attente' && clean.length ? `<button class="btn primary" id="bulk">✓ ${t('Valider les {n} remises sans anomalie', { n: clean.length })}</button>` : ''}</div>
+      ${(() => { const n = [...S.hh.values()].reduce((s, h) => s + (h.corrections || []).filter((c) => !c.revue).length, 0); return n ? `<div class="alert warn small" style="margin-bottom:12px">${t("{n} corrections d'identité à contrôler.", { n })} <a href="#/corrections">${t('Voir')}</a></div>` : ''; })()}
       <div class="seg" style="margin-bottom:14px">${[['en_attente', 'En attente'], ['anomalies', 'Anomalies'], ['validee', 'Validées'], ['rejetee', 'Rejetées']].map(([k, l]) => `<label><input type="radio" name="vf" value="${k}" ${k === f ? 'checked' : ''}>${t(l)} (${cnt(k)})</label>`).join('')}</div>
       ${cards.join('') || `<p class="muted">${t('Rien à afficher.')}</p>`}${list.length > 40 ? `<p class="muted small">${t('{n} autres remises : validez les premières pour voir la suite.', { n: list.length - 40 })}</p>` : ''}`);
     U.$$('input[name=vf]').forEach((r) => (r.onchange = () => (location.hash = '#/validation?f=' + r.value)));
@@ -2404,9 +2462,10 @@ Object.assign(Views, {
       <div class="filters" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"><select id="c-t"><option value="">${t('Tous territoires')}</option>${UI.opt(Views.terrs(), terr)}</select>
         <select id="c-cep"><option value="">${t('Choisir un CEP')}</option>${UI.opt(Views.cepsOf(terr).map((c) => [c.id, `${c.nom} (${c.id})`]), cep)}</select></div>
       ${sample ? `<div class="card"><div class="card-preview">${Card.recto(sample, await Store.media(sample.photo))}${Card.verso(sample)}</div></div>` : ''}
+      <div class="alert info small" style="margin-bottom:12px">${t("Avant d'imprimer : faites la séance photo du CEP, qui permet aussi de corriger les noms.")} <a class="btn sm" href="#/photos?t=${terr}&cep=${cep}">${IC.camera} ${t('Séance photo et vérification')}</a></div>
       <div class="card"><div class="row between"><h2>${list.length} ${t('cartes')}</h2><div class="row"><button class="btn sm" id="all">${t('Tout cocher')}</button><button class="btn primary" id="pr">${IC.print} ${t('Imprimer la sélection')}</button></div></div>
         <div class="alert info small" style="margin-bottom:10px">${t('Dans la fenêtre d\'impression, choisissez l\'imprimante à cartes (ou « Enregistrer en PDF »), format 85,6 × 54 mm, marges : aucune, et cochez « Graphiques d\'arrière-plan ». Chaque carte produit 2 pages : recto puis verso.')}</div>
-        ${!cep && list.length > 150 ? `<div class="alert warn small">${t('Choisissez un CEP pour imprimer par lots.')}</div>` : `<div class="list">${list.map((h) => `<label class="item"><input type="checkbox" class="pick" value="${U.esc(h.id)}" checked style="width:22px;height:22px"><div class="main"><div class="t">${U.esc(h.nom)}</div><div class="m mono">${U.esc(h.id)}${h.photo ? '' : ' · ' + t('sans photo')}</div></div></label>`).join('')}</div>`}</div>`);
+        ${!cep && list.length > 150 ? `<div class="alert warn small">${t('Choisissez un CEP pour imprimer par lots.')}</div>` : `<div class="list">${list.map((h) => `<label class="item"><input type="checkbox" class="pick" value="${U.esc(h.id)}" checked style="width:22px;height:22px"><div class="main"><div class="t">${U.esc(h.nom)}</div><div class="m mono">${U.esc(h.id)}${h.photo ? '' : ' · ' + t('sans photo')}${h.identite && h.identite.verifiee ? '' : ' · ' + t('identité non vérifiée')}</div></div></label>`).join('')}</div>`}</div>`);
     U.$('#c-t').onchange = (e) => (location.hash = '#/cartes?t=' + e.target.value);
     U.$('#c-cep').onchange = (e) => (location.hash = `#/cartes?t=${terr}&cep=${e.target.value}`);
     U.$('#all').onclick = () => { const p = U.$$('.pick'); const v = !p.every((x) => x.checked); p.forEach((x) => (x.checked = v)); };
@@ -2450,12 +2509,12 @@ Object.assign(Views, {
     const ids = new Set(hhs.map((h) => h.id));
     const dists = [...S.dist.values()].filter((d) => ids.has(d.hhId)).sort((a, b) => a.date - b.date);
     const yn = (b) => (b ? t('Oui') : t('Non'));
-    const menages = [['ID', t('Territoire'), 'Code CEP', 'CEP', t('Nom et post-nom'), t('Sexe'), t('Âge'), t("Tranche d'âge"), t('Téléphone'), t("N° carte d'électeur"), t('Village'), t('Statut'), t('Semences reçues'), t('Bétail reçu'), t('Profilé'), t('Consentement'), t('Chef de ménage'), t('État civil'), t('Taille du ménage'), t('Hommes'), t('Femmes'), t('Enfants <5 ans'), t('Enfants 5-17 ans'), t('Personnes 60+'), ...VULN.map(([, l]) => t(l)), t('Score de vulnérabilité'), t('Statut de résidence'), t('Superficie (m²)'), t('Accès à la terre'), t('Cultures'), t('Élevage existant'), t('À vérifier'), t('Source')]];
+    const menages = [['ID', t('Territoire'), 'Code CEP', 'CEP', t('Nom et post-nom'), t('Sexe'), t('Âge'), t("Tranche d'âge"), t('Téléphone'), t("N° carte d'électeur"), t('Village'), t('Statut'), t('Semences reçues'), t('Bétail reçu'), t('Profilé'), t('Consentement'), t('Chef de ménage'), t('État civil'), t('Taille du ménage'), t('Hommes'), t('Femmes'), t('Enfants <5 ans'), t('Enfants 5-17 ans'), t('Personnes 60+'), ...VULN.map(([, l]) => t(l)), t('Score de vulnérabilité'), t('Statut de résidence'), t('Superficie (m²)'), t('Accès à la terre'), t('Cultures'), t('Élevage existant'), t('À vérifier'), t('Source'), t('Photo carte'), t('Identité vérifiée'), t('Nb corrections')]];
     hhs.forEach((h) => {
       const p = h.profil || {}, v = p.vuln || {}, s = Store.statusOf(h), c = S.ceps.get(h.cep) || {};
       menages.push([h.id, h.territoire, h.cep, c.nom, h.nom, h.sexe, h.age || '', h.ageTranche || Store.ageGroup(h), h.tel, h.carte, h.village || h.lieu, t({ non_servi: 'Non servi', partiel: 'Partiel', servi: 'Servi', valide: 'Validé' }[s.code]), yn(s.sem), yn(s.bet), yn(p.completedAt), yn(p.consent),
         p.chef === 'non' ? p.nomChef : p.completedAt ? t('Le bénéficiaire') : '', t(p.etatCivil || ''), p.taille ?? '', p.hommes ?? '', p.femmes ?? '', p.enf5 ?? '', p.enf517 ?? '', p.agees ?? '', ...VULN.map(([k]) => (p.completedAt ? yn(v[k]) : '')), p.completedAt ? Store.vulnScore(p) : '',
-        t(p.residence || ''), p.superficie || h.superficie || '', t(p.foncier || ''), (p.cultures || []).join(', '), (p.elevage || []).join(', '), (h.verifier || []).join(', '), h._src || '']);
+        t(p.residence || ''), p.superficie || h.superficie || '', t(p.foncier || ''), (p.cultures || []).join(', '), (p.elevage || []).join(', '), (h.verifier || []).join(', '), h._src || '', yn(h.photo), yn(h.identite && h.identite.verifiee), (h.corrections || []).length || '']);
     });
     const base = (d) => { const h = S.hh.get(d.hhId) || {}, c = S.ceps.get(h.cep) || {}, pr = d.preuves || {}; return [d.id, U.fmtDate(d.date), h.territoire, c.nom, h.id, h.nom, h.sexe, t({ en_attente: 'En attente', validee: 'Validée', rejetee: 'Rejetée' }[d.statut]), d.agentNom, d.receveur.type === 'mandataire' ? `${d.receveur.nom} (${d.receveur.lien})` : t('Bénéficiaire'), yn(pr.qr), pr.identMotif || '', yn(pr.photo), yn(pr.signature), yn(pr.empreinte), pr.gps ? pr.gps.lat : '', pr.gps ? pr.gps.lon : '', pr.gps ? pr.gps.acc : '', pr.gpsErr || '', yn(d.ecart), d.ecartMotif, d.ecartComment, Store.anomalies(d).join(', '), d.validation ? d.validation.parNom : '', d.validation ? U.fmtDate(d.validation.date) : '', d.validation ? d.validation.commentaire : '', d.obs || '']; };
     const bh = ['ID remise', t('Date'), t('Territoire'), 'CEP', 'ID ménage', t('Nom'), t('Sexe'), t('Statut'), t('Agent'), t('Reçu par'), t('QR scanné'), t('Motif identification'), t('Photo'), t('Signature'), t('Empreinte'), 'Latitude', 'Longitude', t('Précision (m)'), t('Raison sans GPS'), t('Écart'), t("Motif de l'écart"), t('Explication'), t('Anomalies'), t('Validé par'), t('Date validation'), t('Commentaire'), t('Observation')];
@@ -2479,12 +2538,14 @@ Object.assign(Views, {
     [['sexe', t('Sexe')], ['age', t('Âge')], ['vuln', t('Vulnérabilité')]].forEach(([g, l]) => Object.entries(R.dis[g]).forEach(([k, v]) => dis.push([l, t(k), v.n, v.s, U.pct(v.s, v.n)])));
     dis.push([], [t('Espèce'), t('Mâles remis'), t('Femelles remises'), t('Prévu total'), t('Lots bon / moyen / malade')]);
     R.anim.forEach((a) => dis.push([t(a.nom), a.rm, a.rf, a.pm + a.pf, `${a.sante.bon} / ${a.sante.moyen} / ${a.sante.malade}`]));
+    const corr = [['ID', t('Territoire'), 'CEP', t('Date'), t('Par'), t('Champ'), t('Avant'), t('Après'), t('Motif'), t('Contrôle'), t('Contrôlé par')]];
+    hhs.forEach((h) => (h.corrections || []).forEach((c) => Object.entries(c.champs).forEach(([k, [a, b]]) => corr.push([h.id, h.territoire, (S.ceps.get(h.cep) || {}).nom, U.fmtDate(c.date), c.parNom, t((ID_FIELDS.find((f) => f[0] === k) || [, k])[1]), a, b, t(c.motif || ''), c.revue ? t(c.revue.decision === 'annulee' ? 'Annulée' : 'Confirmée') : t('À contrôler'), c.revue ? c.revue.parNom : '']))));
     const kitRows = [[t('Kit'), t('Contenu par ménage'), t('Cible'), t('Ménages affectés'), t('Kits remis'), t('Kits validés'), '% ' + t('de la cible')]];
     R.kits.forEach((k) => kitRows.push([t(k.nom), k.items.map((i) => `${i.qte ?? '?'} ${i.unite} ${i.nom}`).join(', '), k.cible ?? '', k.affectes, k.remis, k.valides, k.cible ? U.pct(k.remis, k.cible) : '']));
     kitRows.push([t('Sans kit affecté'), '', '', R.sansKit]);
     const blob = XLSX.write([{ name: t('Kits'), rows: kitRows, widths: [20, 60, 10, 16, 12, 12, 12] },
       { name: t('Ménages & profilage'), rows: menages }, { name: t('Remises semences'), rows: sem }, { name: t('Remises bétail'), rows: bet },
-      { name: t('Non servis'), rows: ns }, { name: t('Synthèse CEP'), rows: syn, widths: [9, 10, 28, 20, 22, 20] }, { name: t('Désagrégation'), rows: dis, widths: [18, 34, 12, 14, 8] },
+      { name: t('Non servis'), rows: ns }, { name: t('Corrections identité'), rows: corr }, { name: t('Synthèse CEP'), rows: syn, widths: [9, 10, 28, 20, 22, 20] }, { name: t('Désagrégation'), rows: dis, widths: [18, 34, 12, 14, 8] },
     ]);
     U.download(blob, `KYF_suivi_${terr || 'tous'}_${U.stamp()}.xlsx`);
     Store.audit('export-excel', terr || 'tous');
@@ -2712,8 +2773,147 @@ Object.assign(Views, {
     };
   },
   async plus() {
-    const links = [['#/validation', 'check', 'Validation des remises', true], ['#/rapports', 'report', 'Rapports et exports'], ['#/cartes', 'card', 'Cartes bénéficiaires'], ['#/sync', 'sync', 'Synchroniser'], ['#/nouveau', 'users', 'Nouveau ménage'], ['#/parametres', 'gear', 'Paramètres']].filter((l) => !l[3] || UI.isSup());
+    const links = [['#/validation', 'check', 'Validation des remises', true], ['#/rapports', 'report', 'Rapports et exports'], ['#/photos', 'camera', 'Séance photo et vérification'], ['#/corrections', 'check', "Corrections d'identité", true], ['#/cartes', 'card', 'Cartes bénéficiaires'], ['#/sync', 'sync', 'Synchroniser'], ['#/nouveau', 'users', 'Nouveau ménage'], ['#/parametres', 'gear', 'Paramètres']].filter((l) => !l[3] || UI.isSup());
     await shell(`<div class="page-head"><div><h1>${t('Menu')}</h1></div></div><div class="list">${links.map(([h, i, l]) => `<a class="item" href="${h}"><div class="av">${IC[i]}</div><div class="main"><div class="t">${t(l)}</div></div></a>`).join('')}</div>`);
+  },
+});
+
+/* Photo pour la carte + vérification / correction de l'identité, séance photo par CEP, contrôle des corrections. */
+const MOTIFS_NOM = ['Erreur de transcription de la fiche', 'Orthographe donnée par le bénéficiaire', "Nom vérifié sur la carte d'électeur", 'Post-nom ou prénom ajouté', 'Autre'];
+const ID_FIELDS = [['nom', 'Nom et post-nom'], ['sexe', 'Sexe'], ['age', 'Âge'], ['tel', 'Téléphone'], ['carte', "N° carte d'électeur"], ['village', 'Village / localité']];
+
+Object.assign(Views, {
+  /* Fenêtre de prise de photo et de vérification de l'identité. Retourne true si enregistré. */
+  async verifyIdentity(id) {
+    const h = S.hh.get(id);
+    if (!h) return false;
+    let photo = await Store.media(h.photo), newPhoto = null;
+    const ver = (k) => ((h.verifier || []).includes(k) ? ` <span class="badge warn">${t('à vérifier')}</span>` : '');
+    const hist = (h.corrections || []).slice(-3).reverse();
+    return UI.modal({
+      title: t("Photo et vérification d'identité"),
+      body: `<p class="small muted mono">${U.esc(h.id)} · ${U.esc((S.ceps.get(h.cep) || {}).nom || '')}</p>
+        <div class="row" style="align-items:flex-start;gap:14px">
+          <div class="photo-slot ${photo ? 'filled' : ''}" id="vi-ph" style="width:130px;min-height:160px;flex-shrink:0">${photo ? `<img src="${photo}">` : `${IC.camera}<div><b>${t('Prendre la photo')}</b><div class="small muted">${t('visage de face, fond clair')}</div></div>`}</div>
+          <div style="flex:1;min-width:250px">
+            ${h.verifier && h.verifier.length ? `<div class="alert warn small" style="margin-bottom:8px">${t('Écriture incertaine sur la fiche source : faites épeler le nom par le bénéficiaire et comparez avec sa carte d\'électeur.')}</div>` : ''}
+            <label class="field"><span>${t('Nom et post-nom')}${ver('nom')}</span><input type="text" id="vi-nom" value="${U.esc(h.nom)}" autocomplete="off" style="text-transform:uppercase;font-weight:800"></label>
+            <div class="field hidden" id="vi-mo-w"><span>${t('Motif de la correction du nom')} <b class="req">*</b></span><select id="vi-mo"><option value="">—</option>${UI.opt(MOTIFS_NOM.map((x) => [x, t(x)]))}</select>
+              <div class="small" style="margin-top:4px">${t('Ancien nom')} : <b>${U.esc(h.nom)}</b></div></div>
+          </div></div>
+        <div class="form-grid">
+          <label class="field"><span>${t('Sexe')}${ver('sexe')}</span><div class="seg"><label><input type="radio" name="vi-sx" value="F" ${h.sexe === 'F' ? 'checked' : ''}>${t('Femme')}</label><label><input type="radio" name="vi-sx" value="M" ${h.sexe === 'M' ? 'checked' : ''}>${t('Homme')}</label></div></label>
+          <label class="field"><span>${t('Âge')}${ver('age')}</span><input type="number" id="vi-age" min="12" max="110" inputmode="numeric" value="${h.age || ''}" placeholder="${U.esc(h.ageTranche || '')}"></label>
+          <label class="field"><span>${t('Téléphone')}${ver('tel')}</span><input type="tel" id="vi-tel" value="${U.esc(h.tel || '')}"></label>
+          <label class="field"><span>${t("N° carte d'électeur")}${ver('carte')}</span><input type="text" id="vi-carte" inputmode="numeric" value="${U.esc(h.carte || '')}"></label>
+          <label class="field"><span>${t('Village / localité')}${ver('village')}</span><input type="text" id="vi-vil" value="${U.esc(h.village || h.lieu || '')}"></label>
+        </div>
+        <label class="check"><input type="checkbox" id="vi-cons" ${h.profil && h.profil.consent ? 'checked' : ''}><span>${t('Le bénéficiaire accepte la photo pour sa carte et le suivi du projet.')}<br><i class="muted small">Mnufaika anakubali picha yake kwa ajili ya kadi na ufuatiliaji wa mradi.</i></span></label>
+        <label class="check" style="margin-top:6px"><input type="checkbox" id="vi-ok"><span><b>${t('J\'ai vérifié ces informations avec le bénéficiaire.')}</b></span></label>
+        ${hist.length ? `<h3>${t('Corrections précédentes')}</h3><div class="small">${hist.map((c) => `${U.fmtDate(c.date)} · ${U.esc(c.parNom)} : ${Object.entries(c.champs).map(([k, [a, b]]) => `${t((ID_FIELDS.find((f) => f[0] === k) || [, k])[1])} « ${U.esc(a || '—')} » → « ${U.esc(b || '—')} »`).join(' ; ')}`).join('<br>')}</div>` : ''}`,
+      actions: [{ label: t('Annuler'), value: false }, { label: t('Enregistrer'), cls: 'primary', onClick: async (el) => {
+        const g = (s) => U.$(s, el);
+        const nom = g('#vi-nom').value.trim().toUpperCase().replace(/\s+/g, ' ');
+        const vals = { nom, sexe: (U.$('input[name=vi-sx]:checked', el) || {}).value || h.sexe, age: g('#vi-age').value ? +g('#vi-age').value : h.age || '', tel: g('#vi-tel').value.trim(), carte: g('#vi-carte').value.trim(), village: g('#vi-vil').value.trim() };
+        if (nom.length < 3) { UI.toast(t('Indiquez le nom complet'), 'bad'); return false; }
+        if (nom !== h.nom && !g('#vi-mo').value) { UI.toast(t('Indiquez le motif de la correction du nom.'), 'bad'); return false; }
+        if (newPhoto && !g('#vi-cons').checked) { UI.toast(t('Le consentement est requis pour enregistrer la photo ou la position.'), 'bad'); return false; }
+        if (!g('#vi-ok').checked) { UI.toast(t('Cochez la case de vérification avec le bénéficiaire.'), 'bad'); return false; }
+        if (vals.carte && vals.carte !== h.carte) {
+          const dup = [...S.hh.values()].find((x) => x.id !== h.id && x.carte && x.carte === vals.carte);
+          if (dup) { UI.toast(t('Ce n° de carte d\'électeur est déjà enregistré pour {n} ({id}).', { n: dup.nom, id: dup.id }), 'bad'); return false; }
+        }
+        const champs = {};
+        const cur = { ...h, village: h.village || h.lieu || '' };
+        ID_FIELDS.forEach(([k]) => { if (String(cur[k] ?? '') !== String(vals[k] ?? '')) champs[k] = [cur[k] ?? '', vals[k] ?? '']; });
+        Object.assign(h, vals);
+        if (newPhoto) h.photo = await Store.putMedia(newPhoto, 'portrait');
+        if (g('#vi-cons').checked) h.profil = { ...(h.profil || {}), consent: true, consentDate: (h.profil && h.profil.consentDate) || U.now() };
+        if (Object.keys(champs).length) {
+          h.corrections = [...(h.corrections || []), { id: U.uid('C'), date: U.now(), par: S.user.id, parNom: S.user.nom, champs, motif: champs.nom ? g('#vi-mo').value : '', revue: null }];
+        }
+        h.verifier = [];
+        h.identite = { verifiee: true, date: U.now(), par: S.user.id, parNom: S.user.nom };
+        await Store.saveHh(h, Object.keys(champs).length ? 'correction-identite' : 'verification-identite');
+        if (champs.nom) await Store.audit('correction-nom', h.id, `${champs.nom[0]} -> ${champs.nom[1]} (${g('#vi-mo').value})`);
+        UI.toast(t('Enregistré'), 'ok');
+        return true;
+      } }],
+      onOpen: (el) => {
+        const nomInp = U.$('#vi-nom', el);
+        nomInp.oninput = () => U.$('#vi-mo-w', el).classList.toggle('hidden', nomInp.value.trim().toUpperCase().replace(/\s+/g, ' ') === h.nom);
+        U.$('#vi-ph', el).onclick = async () => {
+          const d = await Camera.photo(720, 0.72);
+          if (d) { newPhoto = d; U.$('#vi-ph', el).innerHTML = `<img src="${d}">`; U.$('#vi-ph', el).classList.add('filled'); U.$('#vi-cons', el).checked = true; }
+        };
+      },
+    });
+  },
+
+  /* Séance photo par CEP : on enchaîne les ménages non vérifiés. */
+  async photos() {
+    const qp = Q();
+    const terr = qp.get('t') || '', cep = qp.get('cep') || '';
+    const list = cep ? [...S.hh.values()].filter((h) => h.cep === cep).sort((a, b) => a.id.localeCompare(b.id)) : [];
+    const done = list.filter((h) => h.identite && h.identite.verifiee).length, withPh = list.filter((h) => h.photo).length;
+    const next = list.find((h) => !(h.identite && h.identite.verifiee));
+    await shell(`<div class="page-head"><div><div class="kicker"><a href="#/cartes">${t('Cartes')}</a></div><h1>${t('Séance photo et vérification')}</h1><div class="sub">${t('Prenez la photo de chaque membre et corrigez son nom si nécessaire, avant d\'imprimer les cartes.')}</div></div></div>
+      <div class="filters" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"><select id="p-t"><option value="">${t('Tous territoires')}</option>${UI.opt(Views.terrs(), terr)}</select>
+        <select id="p-cep"><option value="">${t('Choisir un CEP')}</option>${UI.opt(Views.cepsOf(terr).map((c) => [c.id, `${c.nom} (${c.id})`]), cep)}</select></div>
+      ${cep ? `<div class="card"><div class="row between"><div><b>${withPh}</b>/${list.length} ${t('photos')} · <b>${done}</b>/${list.length} ${t('identités vérifiées')}</div>
+          ${next ? `<button class="btn primary" id="p-next">${IC.camera} ${t('Membre suivant')}</button>` : `<span class="badge ok">${t('CEP terminé')}</span> <a class="btn sm" href="#/cartes?t=${terr}&cep=${cep}">${IC.print} ${t('Imprimer les cartes')}</a>`}</div>
+          <div class="progress" style="margin-top:8px"><div style="width:${U.pct(done, list.length)}%"></div></div></div>
+        <div class="list" style="margin-top:12px">${(await Promise.all(list.map(async (h) => {
+          const ph = await Store.media(h.photo);
+          const ok = h.identite && h.identite.verifiee;
+          return `<button class="item" data-id="${U.esc(h.id)}" style="text-align:left;cursor:pointer"><div class="av">${ph ? `<img src="${ph}">` : U.esc(U.initials(h.nom))}</div><div class="main"><div class="t">${U.esc(h.nom)}</div><div class="m mono">${U.esc(h.id)}</div></div>
+            <div class="side">${ok ? `<span class="badge ok">✓ ${t('vérifié')}</span>` : h.verifier && h.verifier.length ? `<span class="badge warn">${t('à vérifier')}</span>` : `<span class="badge">${t('à faire')}</span>`}${h.corrections && h.corrections.length ? `<span class="badge info">${t('corrigé')}</span>` : ''}${ph ? '' : `<span class="badge bad">${t('sans photo')}</span>`}</div></button>`;
+        }))).join('')}</div>` : `<p class="muted">${t('Choisissez un CEP pour commencer.')}</p>`}`);
+    U.$('#p-t').onchange = (e) => (location.hash = '#/photos?t=' + e.target.value);
+    U.$('#p-cep').onchange = (e) => (location.hash = `#/photos?t=${terr}&cep=${e.target.value}`);
+    const run = async (id, chain) => {
+      const saved = await Views.verifyIdentity(id);
+      if (saved && chain) {
+        const n = [...S.hh.values()].filter((h) => h.cep === cep && !(h.identite && h.identite.verifiee)).sort((a, b) => a.id.localeCompare(b.id))[0];
+        if (n) return run(n.id, true);
+      }
+      Views.photos();
+    };
+    U.$$('[data-id]').forEach((b) => (b.onclick = () => run(b.dataset.id, false)));
+    const nx = U.$('#p-next'); if (nx) nx.onclick = () => run(next.id, true);
+  },
+
+  /* Contrôle des corrections d'identité par le superviseur. */
+  async corrections() {
+    const f = Q().get('f') || 'a_revoir';
+    const rows = [];
+    for (const h of S.hh.values()) (h.corrections || []).forEach((c) => rows.push({ h, c }));
+    rows.sort((a, b) => b.c.date - a.c.date);
+    const sel = rows.filter(({ c }) => (f === 'a_revoir' ? !c.revue : !!c.revue));
+    const cards = await Promise.all(sel.slice(0, 60).map(async ({ h, c }) => `<div class="card" data-h="${U.esc(h.id)}" data-c="${c.id}"><div class="row" style="align-items:flex-start">
+        <div class="av" style="width:64px;height:78px;border-radius:8px;overflow:hidden;background:var(--panel-2);display:grid;place-items:center">${(await Store.media(h.photo)) ? `<img src="${await Store.media(h.photo)}" style="width:100%;height:100%;object-fit:cover" data-lb>` : U.esc(U.initials(h.nom))}</div>
+        <div style="flex:1"><b>${U.esc(h.nom)}</b> <span class="mono small muted">${U.esc(h.id)}</span><div class="small muted">${U.esc((S.ceps.get(h.cep) || {}).nom || '')} · ${U.fmtDate(c.date)} · ${U.esc(c.parNom)}</div>
+          <table class="tbl" style="margin-top:6px"><tbody>${Object.entries(c.champs).map(([k, [a, b]]) => `<tr><td class="small">${t((ID_FIELDS.find((x) => x[0] === k) || [, k])[1])}</td><td class="small" style="text-decoration:line-through;color:var(--bad)">${U.esc(a || '—')}</td><td class="small"><b>${U.esc(b || '—')}</b></td></tr>`).join('')}</tbody></table>
+          ${c.motif ? `<div class="small">${t('Motif')} : ${U.esc(t(c.motif))}</div>` : ''}
+          ${c.revue ? `<div class="small muted">${t(c.revue.decision === 'annulee' ? 'Annulée' : 'Confirmée')} ${t('par')} ${U.esc(c.revue.parNom)} · ${U.fmtDate(c.revue.date)}</div>` : ''}</div></div>
+        ${c.revue ? '' : `<div class="row" style="justify-content:flex-end"><button class="btn sm primary" data-act="ok">✓ ${t('Confirmer')}</button><button class="btn sm" data-act="undo" style="color:var(--bad)">${t('Annuler la correction')}</button></div>`}</div>`));
+    await shell(`<div class="page-head"><div><div class="kicker">${t('Superviseur')}</div><h1>${t("Corrections d'identité")}</h1><div class="sub">${t('Contrôlez chaque changement de nom : il pourrait masquer un remplacement de bénéficiaire.')}</div></div></div>
+      <div class="seg" style="margin-bottom:14px">${[['a_revoir', 'À contrôler'], ['revues', 'Contrôlées']].map(([k, l]) => `<label><input type="radio" name="cf" value="${k}" ${k === f ? 'checked' : ''}>${t(l)} (${rows.filter(({ c }) => (k === 'a_revoir' ? !c.revue : !!c.revue)).length})</label>`).join('')}</div>
+      ${cards.join('') || `<p class="muted">${t('Rien à afficher.')}</p>`}`);
+    U.$$('input[name=cf]').forEach((r) => (r.onchange = () => (location.hash = '#/corrections?f=' + r.value)));
+    U.$$('[data-lb]').forEach((i) => (i.onclick = () => UI.lightbox(i.src)));
+    U.$$('[data-act]').forEach((b) => (b.onclick = async () => {
+      const box = b.closest('[data-h]');
+      const h = S.hh.get(box.dataset.h), c = h.corrections.find((x) => x.id === box.dataset.c);
+      if (b.dataset.act === 'undo') {
+        if (!(await UI.confirm(t('Rétablir les anciennes valeurs pour ce ménage ?'), t('Annuler la correction'), 'danger'))) return;
+        Object.entries(c.champs).forEach(([k, [a]]) => { h[k] = a; });
+        h.identite = { verifiee: false };
+      }
+      c.revue = { decision: b.dataset.act === 'undo' ? 'annulee' : 'confirmee', par: S.user.id, parNom: S.user.nom, date: U.now() };
+      await Store.saveHh(h, b.dataset.act === 'undo' ? 'correction-annulee' : 'correction-confirmee');
+      UI.toast(t('Enregistré'), 'ok'); Views.corrections();
+    }));
   },
 });
 
@@ -3097,6 +3297,8 @@ const ROUTES = [
   [/^#\/d\/([^/]+)\/(semences|betail)$/, (id, type) => Views.wizard(decodeURIComponent(id), type)],
   [/^#\/validation$/, () => Views.validation(), true],
   [/^#\/cartes$/, () => Views.cartes()],
+  [/^#\/photos$/, () => Views.photos()],
+  [/^#\/corrections$/, () => Views.corrections(), true],
   [/^#\/rapports$/, () => Views.rapports()],
   [/^#\/sync$/, () => Views.sync()],
   [/^#\/parametres$/, () => Views.parametres()],
